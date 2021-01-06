@@ -17,10 +17,10 @@ private urlEndPoint: string = 'http://localhost:9999/api/clientes';
   getClientes(): Observable<Cliente[]> {
     //return of(CLIENTES);
     // se hace un cast a un Observable en esta forma
-        //return this.http.get<Cliente[]>(this.urlEndPoint)
+    return this.http.get<Cliente[]>(this.urlEndPoint);
     //otra forma de convertir el any JSon a un cleinte[]es
-    return this.http.get(this.urlEndPoint).pipe(
+    /*return this.http.get(this.urlEndPoint).pipe(
       map( (response) => response as Cliente[] )
-    );
+    );*/
   }
 }
