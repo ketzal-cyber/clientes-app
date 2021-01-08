@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CLIENTES } from './clientes.json';
 import { Cliente } from './cliente';
 import { of, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 
@@ -10,6 +10,9 @@ import { map } from 'rxjs/operators';
 export class ClienteService {
 
 private urlEndPoint: string = 'http://localhost:9999/api/clientes';
+
+private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
+
 //inyectar una vraible HttpClient
 //ademas la variable queda como vvariable de clase
   constructor(private http: HttpClient ) { }
@@ -22,5 +25,9 @@ private urlEndPoint: string = 'http://localhost:9999/api/clientes';
     /*return this.http.get(this.urlEndPoint).pipe(
       map( (response) => response as Cliente[] )
     );*/
+  }
+
+  create(cliente: Cliente): Observable<Cliente> {
+    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders} )
   }
 }
