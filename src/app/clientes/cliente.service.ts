@@ -30,8 +30,16 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
     );*/
   }
 
+  //captura de error
   create(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders} )
+    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders} ).pipe(
+      catchError(e => {
+        console.log('mensaje de error');
+        console.log(e.error.mensaje);
+        swal.fire('Error al crear cliente ', e.error.Mensaje, 'error');
+        return throwError(e);
+      })
+    );
   }
 
 /** implementacion manejo de errores operadar catchError
@@ -45,18 +53,33 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
       catchError(e => {
         this.router.navigate(['/clientes']);
         console.log(e.error.mensaje);
-        swal.fire('Error al editar', e.error.mensaje, 'error');
+        swal.fire('Error al editar ', e.error.Mensaje, 'error');
         return throwError(e);
       })
     );
   }
 
+  //captura de error
   update(cliente: Cliente): Observable<Cliente>{
-    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders})
+    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+      catchError(e => {
+        console.log('mensaje de error');
+        console.log(e.error.mensaje);
+        swal.fire('Error al actualiar cliente ', e.error.Mensaje, 'error');
+        return throwError(e);
+      })
+    );
   }
 
+  //captura de error
   delete(id: number): Observable<Cliente> {
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders})
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
+      catchError(e => {
+        console.log(e.error.mensaje);
+        swal.fire('Error al eliminar cliente', e.error.Mensaje, 'error');
+        return throwError(e);
+      })
+    );
   }
 
 }
