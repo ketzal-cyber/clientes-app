@@ -30,9 +30,13 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
     );*/
   }
 
-  //captura de error
+  /* captura de error
+    otro metodo para convertir un parametro del json a un cliente es co map()
+  */
+
   create(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders} ).pipe(
+    return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeaders} ).pipe(
+      map((json:any) => json.cliente as Cliente),
       catchError(e => {
         console.log('mensaje de error');
         console.log(e.error.mensaje);
@@ -60,8 +64,9 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
   }
 
   //captura de error
-  update(cliente: Cliente): Observable<Cliente>{
-    return this.http.put<Cliente>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+  //para corregir que ya no muestra el cliente al insertar volvemos any xq requesamos un json con mensaje y el objeto
+  update(cliente: Cliente): Observable<any>{
+    return this.http.put<any>(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
       catchError(e => {
         console.log('mensaje de error');
         console.log(e.error.mensaje);

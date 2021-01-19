@@ -39,7 +39,7 @@ public titulo: string = "Crear Cliente";
     this.clienteService.create(this.cliente)
     .subscribe(cliente => {
       this.router.navigate(['/clientes'])
-      swal.fire('Nuevo cliente', `Cliente ${cliente.nombre} credo con exito`, 'success')
+      swal.fire('Nuevo cliente', `El cliente ${cliente.nombre} ha sido creado con exito`, 'success')
     }
     )
 
@@ -47,9 +47,9 @@ public titulo: string = "Crear Cliente";
 
   update(): void {
     this.clienteService.update(this.cliente)
-    .subscribe( cliente => {
+    .subscribe( json => {
       this.router.navigate(['/clientes'])
-      swal.fire('Cliente actualizado', `Cliente ${cliente.nombre} actualizado con exito `, 'success')
+      swal.fire('Cliente actualizado', `${json.mensaje}: ${json.cliente.nombre} `, 'success')
     }
 
     )
