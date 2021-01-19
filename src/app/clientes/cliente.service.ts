@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CLIENTES } from './clientes.json';
 import { Cliente } from './cliente';
-import { of, Observable } from 'rxjs';
+import { of, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, catchError} from 'rxjs/operators';
+import  swal  from 'sweetalert2';
+
+import { Router } from '@angular/router';
 
 
 @Injectable()
@@ -15,7 +18,7 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 
 //inyectar una vraible HttpClient
 //ademas la variable queda como vvariable de clase
-  constructor(private http: HttpClient ) { }
+  constructor(private http: HttpClient, private router: Router ) { }
 
   getClientes(): Observable<Cliente[]> {
     //return of(CLIENTES);
@@ -31,8 +34,21 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
     return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders} )
   }
 
+/** implementacion manejo de errores operadar catchError
+      uso de metodo pipe
+      uso de swal para mostrar el error sweetalert2
+      debemos retornar el error en un tipo Observable, import throwError
+      redirigimos al listado
+ */
   getCliente(id): Observable<Cliente>{
-    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`)
+    return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
+      catchError(e => {
+        this.router.navigate(['/clientes']);
+        console.log(e.error.mensaje);
+        swal.fire('Error al editar', e.error.mensaje, 'error');
+        return throwError(e);
+      })
+    );
   }
 
   update(cliente: Cliente): Observable<Cliente>{
