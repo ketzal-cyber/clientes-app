@@ -17,7 +17,7 @@ public titulo: string = "Crear Cliente";
     private router: Router,
     private activateroute: ActivatedRoute  ) { }
 
-    private errors: string[];
+    public errors: string[];
 
   ngOnInit(): void {
     this.cargarCliente()
