@@ -32,12 +32,19 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 
   /* captura de error
     otro metodo para convertir un parametro del json a un cliente es co map()
+    caturar el status del error con e.stauts==400
   */
 
   create(cliente: Cliente): Observable<Cliente> {
     return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeaders} ).pipe(
       map((json:any) => json.cliente as Cliente),
       catchError(e => {
+
+        //capturar status errores
+        if(e.status==400){
+            return throwError(e);
+        }
+
         console.log('mensaje de error');
         console.log(e.error.mensaje);
         swal.fire('Error al crear cliente ', e.error.Mensaje, 'error');
@@ -55,6 +62,12 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
   getCliente(id): Observable<Cliente>{
     return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
+
+        //capturar status errores
+        if(e.status==400){
+            return throwError(e);
+        }
+        
         this.router.navigate(['/clientes']);
         console.log(e.error.mensaje);
         swal.fire('Error al editar ', e.error.Mensaje, 'error');

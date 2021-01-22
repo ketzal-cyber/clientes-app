@@ -17,6 +17,8 @@ public titulo: string = "Crear Cliente";
     private router: Router,
     private activateroute: ActivatedRoute  ) { }
 
+    private errors: string[];
+
   ngOnInit(): void {
     this.cargarCliente()
   }
@@ -40,6 +42,11 @@ public titulo: string = "Crear Cliente";
     .subscribe(cliente => {
       this.router.navigate(['/clientes'])
       swal.fire('Nuevo cliente', `El cliente ${cliente.nombre} ha sido creado con exito`, 'success')
+    },
+    err => {
+      this.errors = err.error.errors as string[];
+      console.log('Codigo de error desde el backend: ' + err.status);
+      console.log(err.error.errors);
     }
     )
 
@@ -50,6 +57,11 @@ public titulo: string = "Crear Cliente";
     .subscribe( json => {
       this.router.navigate(['/clientes'])
       swal.fire('Cliente actualizado', `${json.mensaje}: ${json.cliente.nombre} `, 'success')
+    },
+    err => {
+      this.errors = err.error.errors as string[];
+      console.log('Codigo de error desde el backend: ' + err.status);
+      console.log(err.error.errors);
     }
 
     )
