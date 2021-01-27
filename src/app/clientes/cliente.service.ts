@@ -17,17 +17,25 @@ private urlEndPoint: string = 'http://localhost:9999/api/clientes';
 private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 
 //inyectar una vraible HttpClient
-//ademas la variable queda como vvariable de clase
+//ademas la variable queda como variable de clase
   constructor(private http: HttpClient, private router: Router ) { }
 
   getClientes(): Observable<Cliente[]> {
     //return of(CLIENTES);
     // se hace un cast a un Observable en esta forma
-    return this.http.get<Cliente[]>(this.urlEndPoint);
-    //otra forma de convertir el any JSon a un cleinte[]es
-    /*return this.http.get(this.urlEndPoint).pipe(
-      map( (response) => response as Cliente[] )
-    );*/
+    // forma de convertir el any JSon a un cleinte[]es
+    //return this.http.get<Cliente[]>(this.urlEndPoint);
+    // otra forma de convertir JSon
+    return this.http.get(this.urlEndPoint).pipe(
+      map( response => {
+        let clientes = response as Cliente[];
+        return clientes.map(cliente => {
+          cliente.nombre = cliente.nombre.toUpperCase();
+          return cliente;
+        })
+       }
+      )
+    );
   }
 
   /* captura de error
@@ -67,7 +75,7 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
         if(e.status==400){
             return throwError(e);
         }
-        
+
         this.router.navigate(['/clientes']);
         console.log(e.error.mensaje);
         swal.fire('Error al editar ', e.error.Mensaje, 'error');
