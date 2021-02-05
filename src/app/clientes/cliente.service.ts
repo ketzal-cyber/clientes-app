@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { formatDate, DatePipe } from '@angular/common';
+
 import { CLIENTES } from './clientes.json';
 import { Cliente } from './cliente';
 import { of, Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map, catchError} from 'rxjs/operators';
+import { map, catchError, tap} from 'rxjs/operators';
 import  swal  from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -21,26 +22,73 @@ private httpHeaders = new HttpHeaders({ 'Content-Type': 'application/json'})
 //ademas la variable queda como variable de clase
   constructor(private http: HttpClient, private router: Router ) { }
 
-  getClientes(): Observable<Cliente[]> {
-    //return of(CLIENTES);
-    // se hace un cast a un Observable en esta forma
-    // forma de convertir el any JSon a un cleinte[]es
-    //return this.http.get<Cliente[]>(this.urlEndPoint);
-    // otra forma de convertir JSon
-    return this.http.get(this.urlEndPoint).pipe(
-      map( response => {
-        let clientes = response as Cliente[];
-        return clientes.map(cliente => {
+/* metodo que trea el listado de cleintes ajo el metodo findAll() en el Backend
+getClientes(): Observable<Cliente[]> {
+  //return of(CLIENTES);
+  // se hace un cast a un Observable en esta forma
+  // forma de convertir el any JSon a un cleinte[]es
+  //return this.http.get<Cliente[]>(this.urlEndPoint);
+  // otra forma de convertir JSon
+  return this.http.get(this.urlEndPoint).pipe(
+    map( response => {
+      let clientes = response as Cliente[];
+      return clientes.map(cliente => {
+        cliente.nombre = cliente.nombre.toUpperCase();
+
+        /*formatear fecha Angular importar formatDate
+          //cliente.createAt = formatDate(cliente.createAt, 'dd-MM-yyyy', 'en-US'); // una forma
+        //otra forma de dar formato a la fecha es con DatePipe dentro de common
+        // formatos de fecha ' EEE MMM yyyy' dia abrebiado y mes abrebiado   'EEEE dd, MMMM yyyy' dia y mes completos en letras
+         para fecha completa 'fullDate'
+         para formato en español
+            importar localEs
+            ocupar la funcion registerLocaleDate e importar de common
+            para tenerlo de forma global implementarlo en app-module
+              registerLocaleData(localEs, 'es-MX');
+        *end de comentario/
+
+        let datePipe = new DatePipe('es-MX');
+        cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy');
+        return cliente;
+      })
+     }
+    )
+  );
+}
+* Modifficacion de metodo para la painacion
+* agregar un parametro a getclientes()
+*/
+
+  getClientes(page: number): Observable<any> {
+
+    return this.http.get(this.urlEndPoint + '/page/'+ page).pipe(
+      tap((response: any) => {
+        console.log('clienteService: tap 1');
+        (response.content as Cliente[]).forEach(cliente => {
+          console.log(cliente.nombre);
+        }
+
+        )
+      }),
+      map( (response: any) => {
+        (response.content as Cliente[]).map(cliente => {
           cliente.nombre = cliente.nombre.toUpperCase();
-          //formatear fecha Angular importar formatDate
-            //cliente.createAt = formatDate(cliente.createAt, 'dd-MM-yyyy', 'en-US'); // una forma
-          //otra forma de dar formato a la fecha es con DatePipe dentro de common
-          let datePipe = new DatePipe('en-US');
-          cliente.createAt = datePipe.transform(cliente.createAt, 'dd/MM/yyyy');
+
+          //let datePipe = new DatePipe('es-MX');
+          //cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy');
           return cliente;
-        })
-       }
+        });
+        return response;
+      }
+    ),
+    tap(response => {
+      console.log('clienteService: tap 2');
+      (response.content as Cliente[]).forEach(cliente => {
+        console.log(cliente.nombre);
+      }
+
       )
+    })
     );
   }
 

@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import  localEs from '@angular/common/locales/es-MX';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -11,6 +13,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormComponent } from './clientes/form.component';
 import { FormsModule } from '@angular/forms';
+
+/*lineas para formato de fechas de manera global
+*/
+registerLocaleData(localEs, 'es-MX');
 
 const routes: Routes = [
   { path: '', redirectTo: '/clientes', pathMatch: 'full'},
