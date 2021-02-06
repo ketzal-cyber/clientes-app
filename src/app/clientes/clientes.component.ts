@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ClientesComponent implements OnInit {
 
   clientes: Cliente[];
+  paginador: any;
 
   constructor( private clienteService: ClienteService,
   private activatedRoute: ActivatedRoute) { }
@@ -36,7 +37,10 @@ export class ClientesComponent implements OnInit {
           });
         })
         // .subscribe( clientes => this.clientes = clientes );
-      ).subscribe( response => this.clientes = response.content as Cliente[] );
+      ).subscribe( response => {
+        this.clientes = response.content as Cliente[];
+        this.paginador = response;
+      } );
     }
     );
   }
