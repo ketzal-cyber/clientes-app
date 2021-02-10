@@ -16,8 +16,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+
 
 /*lineas para formato de fechas de manera global
+    import { MatNativeDateModule } from '@angular/material/core'; es para formatos US
+    npm i @angular/material-moment-adapter --save
 */
 registerLocaleData(localEs, 'es-MX');
 
@@ -45,9 +51,15 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatMomentDateModule
   ],
-  providers: [ClienteService],
+  providers: [
+    ClienteService,
+    MatDatepickerModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

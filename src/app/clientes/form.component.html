@@ -54,11 +54,17 @@
         </div>
       </div>
 
-      <!--implementacion de campo fecha -->
+      <!--implementacion de campo fecha
+      metodo para fecha con HTML5
+      <input type="date" class="fomr-control" [(ngModel)]="cliente.createAt" name="createAt" >
+     -->
+
       <div class="form-group row">
         <label for="createAt" class="col-form-label col-sm-2">Fecha</label>
         <div class="col-sm-6">
-          <input type="date" class="fomr-control" [(ngModel)]="cliente.createAt" name="createAt" >
+          <input class="fomr-control" [(ngModel)]="cliente.createAt" name="createAt" matInput [matDatepicker]="picker" style="display:line; width:100px;" >
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
         </div>
       </div>
 
