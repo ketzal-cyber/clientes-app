@@ -3,6 +3,8 @@ import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
 import { ActivatedRoute } from '@angular/router';
 
+import swal from 'sweetalert2';
+
 @Component({
   selector: 'detalle-cliente',
   templateUrl: './detalle.component.html',
@@ -12,7 +14,10 @@ export class DetalleComponent implements OnInit {
 
   cliente: Cliente;
   titulo: string  = "Detalle del cliente";
-  constructor(private clienteService: ClienteService, private activatedRoute: ActivatedRoute) { }
+  public fotoSeleccionada: File;
+
+  constructor(private clienteService: ClienteService,
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(params => {
@@ -20,9 +25,33 @@ export class DetalleComponent implements OnInit {
       if(id){
         this.clienteService.getCliente(id).subscribe(cliente => {
           this.cliente = cliente;
-        })
+        });
       }
     });
   }
+
+
+  seleccionarFoto(event){
+    this.fotoSeleccionada = event.target.files[0];
+    console.log(this.fotoSeleccionada);
+    if(this.fotoSeleccionada.type.indexOf('image') < 0){
+      swal.fire('Error Seleccionar imagen: ', 'el archivo debe ser del tipo imagen', 'error');
+      this.fotoSeleccionada = null;
+    }
+  }
+
+  subirFoto(){
+
+    if(!this.fotoSeleccionada){
+      swal.fire('Error Upload: ', 'Debe seleccionar una foto', 'error');
+    } else {
+      this.clienteService.subirFoto(this.fotoSeleccionada, this.cliente.id)
+      .subscribe(cliente => {
+        this.cliente = cliente;
+        swal.fire('La foto se ha subido completamente', `La foto se ha subido con exito ${this.cliente.foto}`, "success");
+      });
+     }
+    }
+
 
 }

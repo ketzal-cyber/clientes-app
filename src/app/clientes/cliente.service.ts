@@ -162,4 +162,22 @@ getClientes(): Observable<Cliente[]> {
     );
   }
 
+  /*
+  implementacion de metodo para imagen
+  */
+  subirFoto(archivo: File, id): Observable<Cliente>{
+    let formData = new FormData();
+    formData.append("archivo", archivo);
+    formData.append("id", id);
+
+    return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
+      map( (response: any) => response.cliente as Cliente),
+      catchError(e => {
+        console.log(e.error.Mensaje);
+        swal.fire('Error al subir imagen', e.error.Mensaje, 'error');
+        return throwError(e);
+      })
+    );
+  }
+
 }
