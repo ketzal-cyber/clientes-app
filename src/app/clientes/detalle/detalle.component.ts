@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +13,8 @@ import swal from 'sweetalert2';
 })
 export class DetalleComponent implements OnInit {
 
-  cliente: Cliente;
+  @Input()cliente: Cliente;
+
   titulo: string  = "Detalle del cliente";
   public fotoSeleccionada: File;
   progreso: number = 0;
@@ -22,6 +23,9 @@ export class DetalleComponent implements OnInit {
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    /*
+    ya no va porque se inyecta el cleinte con el decorador Input
     this.activatedRoute.paramMap.subscribe(params => {
       let id: number = +params.get('id');
       if(id){
@@ -29,7 +33,7 @@ export class DetalleComponent implements OnInit {
           this.cliente = cliente;
         });
       }
-    });
+    }); */
   }
 
 
