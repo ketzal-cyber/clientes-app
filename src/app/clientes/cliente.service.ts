@@ -4,7 +4,7 @@ import { formatDate, DatePipe } from '@angular/common';
 import { CLIENTES } from './clientes.json';
 import { Cliente } from './cliente';
 import { of, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
 import { map, catchError, tap} from 'rxjs/operators';
 import  swal  from 'sweetalert2';
 
@@ -164,12 +164,25 @@ getClientes(): Observable<Cliente[]> {
 
   /*
   implementacion de metodo para imagen
+  -- implementando barra progreso
+  el observable retornara un event de tipo Htt
+    subirFoto(archivo: File, id): Observable<Cliente>{
   */
-  subirFoto(archivo: File, id): Observable<Cliente>{
+  subirFoto(archivo: File, id): Observable<HttpEvent<{}>>{
     let formData = new FormData();
     formData.append("archivo", archivo);
     formData.append("id", id);
 
+    // codigo ppara barra de progreso
+    const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData, {
+      reportProgress: true
+    });
+
+    return this.http.request(req);
+
+
+    /*
+    --sin barra de progreso
     return this.http.post(`${this.urlEndPoint}/upload`, formData).pipe(
       map( (response: any) => response.cliente as Cliente),
       catchError(e => {
@@ -177,7 +190,8 @@ getClientes(): Observable<Cliente[]> {
         swal.fire('Error al subir imagen', e.error.Mensaje, 'error');
         return throwError(e);
       })
-    );
+    );*/
+
   }
 
 }
