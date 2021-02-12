@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
+import { ModalService } from  './detalle/modal.service';
+
 import swal from 'sweetalert2';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
@@ -17,6 +19,7 @@ export class ClientesComponent implements OnInit {
   clienteSeleccionado: Cliente;
 
   constructor( private clienteService: ClienteService,
+    public modalService:  ModalService,
   private activatedRoute: ActivatedRoute) { }
 ;
 
@@ -86,6 +89,7 @@ swalWithBootstrapButtons.fire({
   //metodo para arir modal de detalle
   abrirModal(cliente: Cliente){
     this.clienteSeleccionado = cliente;
+    this.modalService.abrirModal();
   }
 
 }

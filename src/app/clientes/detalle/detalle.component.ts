@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Cliente } from '../cliente';
 import { ClienteService } from '../cliente.service';
-import { ActivatedRoute } from '@angular/router';
+import { ModalService } from  './modal.service';
 import { HttpEventType } from '@angular/common/http';
 
 import swal from 'sweetalert2';
@@ -20,11 +20,12 @@ export class DetalleComponent implements OnInit {
   progreso: number = 0;
 
   constructor(private clienteService: ClienteService,
-    private activatedRoute: ActivatedRoute) { }
+    public modalService:  ModalService,) { }
 
   ngOnInit(): void {
 
     /*
+        import -> import { ActivatedRoute } from '@angular/router';
     ya no va porque se inyecta el cleinte con el decorador Input
     this.activatedRoute.paramMap.subscribe(params => {
       let id: number = +params.get('id');
@@ -70,5 +71,9 @@ export class DetalleComponent implements OnInit {
      }
     }
 
-
+    cerrarModal(){
+      this.modalService.cerrarModal();
+      this.fotoSeleccionada = null;
+      this.progreso = 0;
+    }
 }
